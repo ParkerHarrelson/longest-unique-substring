@@ -8,27 +8,31 @@ public class LongestSubstring {
             return new Substring("", 0);
         }
 
-        int max = 0;
-        String maxSubstring = "";
-        for (int i = 0; i < s.length(); i++) {
-            int length = 0;
-            String sub = "";
-            Set<Character> seen = new HashSet<>();
-            for (int j = i; j < s.length(); j++) {
-                if (!seen.contains(s.charAt(j))) {
-                    seen.add(s.charAt(j));
-                    sub += s.charAt(j);
-                    length++;
-                } else {
-                    break;
-                }
+        Set<Character> seen = new HashSet<>();
+        int left = 0;
+        int bestStart = 0;
+        int bestLength = 0;
+
+        for (int right = 0; right < s.length(); right++) {
+            char current = s.charAt(right);
+
+            while (seen.contains(current)) {
+                seen.remove(s.charAt(left));
+                left++;
             }
-            if (length > max) {
-                max = length;
-                maxSubstring = sub;
+
+            seen.add(current);
+            int length = right - left + 1;
+
+            if (length > bestLength) {
+                bestStart = left;
+                bestLength = length;
             }
         }
 
-        return new Substring(maxSubstring, max);
+        return new Substring(
+                s.substring(bestStart, bestStart + bestLength),
+                bestLength
+        );
     }
 }
